@@ -15,12 +15,9 @@ int main()
 
 	SetTargetFPS(60);
 
-	padP1.rec.x = 20;
-	padP1.rec.y = 200;
-	padP1.color = DARKBLUE;
-
-	padP2.rec.x = screenWidth - 20 - padP2.rec.width;
-	padP2.rec.y = 200;
+	// Place paddles
+	PositionPads(padP1, padP2);
+	padP1.color = DARKGRAY;
 	padP2.color = RED;
 
 	// Main game loop
@@ -36,19 +33,92 @@ int main()
 
 		ClearBackground(BLACK);
 
-		DrawRectangleRec(field, DARKGREEN);
+		DrawRectangleRec(field, DARKBLUE);
 		DrawLine(screenWidth / 2, 0, screenWidth / 2, screenHeight, WHITE);
 		DrawLine(0, screenHeight / 2, screenWidth, screenHeight / 2, WHITE);
 		DrawRectangleRec(padP1.rec, padP1.color);
 		DrawRectangleRec(padP2.rec, padP2.color);
 		DrawCircleV(ball.pos, ball.radius, ball.color);
+		DrawFPS(10, 10);
 
 		EndDrawing();
+
+		// Check win/lose conditions
+		if (GameEnd(ball))
+		{
+			RestartGame(padP1, padP2, ball);
+			WaitTime(1000);
+		}
 	}
 
 	CloseWindow();
 
 	return 0;
+}
+
+void RestartGame(Paddle& p1, Paddle& p2, Ball& ball)
+{
+	ResetBall(ball);
+	PositionPads(p1, p2);
+}
+
+void PositionPads(Paddle& p1, Paddle& p2)
+{
+	p1.rec.x = 20;
+	p1.rec.y = 200;
+
+	p2.rec.x = GetScreenWidth() - 20 - p2.rec.width;
+	p2.rec.y = 200;
+}
+
+void ResetBall(Ball& ball)
+{
+	ball.pos = { 400, 225 };
+
+	switch (rand() % 4)
+	{
+	case 0:
+		ball.vel.x = -ball.speed;
+		ball.vel.y = -ball.speed;
+		break;
+
+	case 1:
+		ball.vel.x = ball.speed;
+		ball.vel.y = -ball.speed;
+		break;
+
+	case 2:
+		ball.vel.x = -ball.speed;
+		ball.vel.y = ball.speed;
+		break;
+
+	case 3:
+		ball.vel.x = ball.speed;
+		ball.vel.y = ball.speed;
+		break;
+}
+}
+
+bool GameEnd(Ball ball)
+{
+	if (ball.pos.x < 0)
+	{
+		BeginDrawing();
+		DrawText("RED WINS!", 100, 50, 100, BLACK);
+		EndDrawing();
+
+		return true;
+	}
+	else if (ball.pos.x > GetScreenWidth())
+	{
+		BeginDrawing();
+		DrawText("BLACK WINS!", 100, 50, 100, BLACK);
+		EndDrawing();
+
+		return true;
+	}
+
+	return false;
 }
 
 void BallCollisions(Ball& ball, Paddle pad1, Paddle pad2, Rectangle field)
@@ -71,15 +141,15 @@ void MoveBall(Ball& ball)
 	ball.pos.y += ball.vel.y;
 }
 
-void GetInput(Paddle& padP1, Paddle& padP2)
+void GetInput(Paddle& p1, Paddle& p2)
 {
-	if (IsKeyDown(KEY_W))
-		padP1.rec.y -= 8.0f;
-	else if (IsKeyDown(KEY_S))
-		padP1.rec.y += 8.0f;
+	if (IsKeyDown(KEY_W) && p1.rec.y >= 8)
+		p1.rec.y -= 8.0f;
+	else if (IsKeyDown(KEY_S) && p1.rec.y <= GetScreenHeight() - p1.rec.height)
+		p1.rec.y += 8.0f;
 
-	if (IsKeyDown(KEY_UP))
-		padP2.rec.y -= 8.0f;
-	else if (IsKeyDown(KEY_DOWN))
-		padP2.rec.y += 8.0f;
+	if (IsKeyDown(KEY_UP) && p2.rec.y >= 8)
+		p2.rec.y -= 8.0f;
+	else if (IsKeyDown(KEY_DOWN) && p2.rec.y <= GetScreenHeight() - p2.rec.height)
+		p2.rec.y += 8.0f;
 }
