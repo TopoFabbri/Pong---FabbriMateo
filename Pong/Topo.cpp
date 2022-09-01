@@ -120,11 +120,33 @@ bool inRange(float toComp, float min, float max)
 	return false;
 }
 
+bool recCircleColliding(Rectangle rec, Circle cir)
+{
+	Vector2 tmp{ cir.center.x, cir.center.y };
+
+	if (cir.center.x < rec.x)
+		tmp.x = rec.x;
+	else if (cir.center.x > rec.x + rec.width)
+		tmp.x = rec.x + rec.width;
+	if (cir.center.y < rec.y)
+		tmp.y = rec.y;
+	else if (cir.center.y > rec.y + rec.height)
+		tmp.y = rec.y + rec.height;
+
+	Vector2 dist{ cir.center.x - tmp.x, cir.center.y - tmp.y };
+	float distance = sqrt((dist.x * dist.x) + (dist.y * dist.y));
+
+	if (distance <= cir.radius)
+		return true;
+
+	return false;
+}
+
 Vector2 getCircleRecCollisionPos(Rectangle rec, Circle circ)
 {
 	Vector2 colPos;
 
-	if (CheckCollisionCircleRec(circ.center, circ.radius, rec))
+	if (recCircleColliding(rec, circ))
 	{
 		// X straight cases
 		if (inRange(circ.center.y, rec.y, rec.y + rec.height))

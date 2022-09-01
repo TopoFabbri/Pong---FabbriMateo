@@ -1,6 +1,6 @@
 #pragma once
 
-#include "raylib.h"
+#include <raylib.h>
 #include <cmath>
 
 struct Line
@@ -46,4 +46,5 @@ Line getLine(Vector2 start);
 float getQuadArea(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4);
 bool compareVectors(Vector2 v1, Vector2 v2);
 bool inRange(float toComp, float min, float max);
+bool recCircleColliding(Rectangle rec, Circle cir);
 Vector2 getCircleRecCollisionPos(Rectangle rec, Circle circ);

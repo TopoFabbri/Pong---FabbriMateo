@@ -6,24 +6,24 @@ void Defaults();
 
 void main()
 {
-    RunProgram();
+	RunProgram();
 }
 
 void RunProgram()
 {
-    Defaults();
-    Game::Play();
+	Defaults();
+	loop();
 }
 
 void Defaults()
 {
-    srand(time(nullptr));
+	srand(time(nullptr));
 
 	const int screenWidth = 1920;// 800 
-    const int screenHeight = 1080;// 450 
+	const int screenHeight = 1080;// 450 
 
-    InitWindow(screenWidth, screenHeight, "PONG - FabbriMateo");
-    MaximizeWindow();
+	InitWindow(screenWidth, screenHeight, "PONG - FabbriMateo");
+	MaximizeWindow();
 
-    SetTargetFPS(60);
+	SetTargetFPS(140);
 }

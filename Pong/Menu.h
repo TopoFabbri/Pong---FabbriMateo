@@ -1,41 +1,34 @@
 #pragma once
-
 #include "Button.h"
-#include "Slider.h"
-#include "Topo.h"
+#include "GameSettings.h"
 
-namespace Menu
+struct Buttons
 {
-	struct Buttons
-	{
-		Button Play;
-		Button Exit;
-		Button Settings;
-		Button Controls;
-	};
+	Button Play;
+	Button Exit;
+	Button Settings;
+	Button Controls;
+	Button Credits;
+};
 
-	struct Sliders
-	{
-		Slider::Slider volume;
-	};
+struct Menu
+{
+	Texture2D bg;
+	bool isActive;
+	const char* title;
+	Vector2 titlePos;
+	Buttons btn;
+};
 
-	struct Menu
-	{
-		Texture2D bg;
-		bool isActive{};
-		const char* title{};
-		Vector2 titlePos{};
-		Buttons btn{};
-		Sliders sliders{};
-	};
-
-	void mainMenu();
-	void draw(Menu menu);
-	void positionTitle(Menu& menu);
-	void takeInput(Menu& menu);
-	void updateButtons(Menu& menu);
-	void updateButton(Button& btn, float posY);
-	void controlsMenu();
-	void controlsMenuUpdate(Menu& ui);
-	void settingsMenu();
-}
+Buttons createButtons();
+Menu createMenu();
+void mainMenu(GameSettings& gSettings, Menu& mMenu);
+void draw(Menu menu);
+void positionTitle(Menu& menu);
+void takeInput(Menu& menu, GameSettings& gSettings);
+void updateButtons(Menu& menu);
+void updateButton(Button& btn, float posY);
+void controlsMenu(GameSettings& gSettings, Menu& ui);
+void controlsMenuUpdate(Menu& ui, GameSettings& gSettings);
+void settingsMenu(GameSettings& gSettings, Menu& ui);
+void creditsMenu(GameSettings& gSettings, Menu& ui);
